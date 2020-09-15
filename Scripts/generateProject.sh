@@ -1,0 +1,1 @@
+rm -rf GithubExplorer.* && xcodegen generate && open "GithubExplorer.xcodeproj"

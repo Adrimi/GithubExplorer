@@ -1,0 +1,31 @@
+name: GithubExplorer
+options:
+  bundleIdPrefix: io.adrimi
+
+packages:
+  Apollo:
+    url: https://github.com/apollographql/apollo-ios.git
+    from: 0.33.0-beta1
+
+targets:
+  GithubExplorer:
+    type: application
+    platform: iOS
+    deploymentTarget: "13.0"
+    sources: GithubExplorer
+    settings:
+      base:
+        SWIFT_VERSION: "5"
+    scheme:
+      testTargets:
+        - GithubExplorerTests
+    info:
+      path: GithubExplorer/Resources/Info.plist
+
+  GithubExplorerTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "13.0"
+    sources: GithubExplorerTests
+    dependencies:
+      - target: GithubExplorer
