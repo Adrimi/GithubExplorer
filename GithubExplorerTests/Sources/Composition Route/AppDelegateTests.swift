@@ -11,22 +11,10 @@ import XCTest
 
 class AppDelegateTests: XCTestCase {
     
-    // MARK: Parameters
-    private var sut: AppDelegate!
-    private var launchResult: Bool!
-    
-    // MARK: Setup
-    override func setUpWithError() throws {
-        sut = AppDelegate()
-        launchResult = sut.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
-    }
-    
-    override func tearDownWithError() throws {
-        sut = nil
-    }
-    
     // MARK: - Tests
     func test_applicationSouldLaunch_withTrueValue() {
+        let sut = AppDelegate()
+        let launchResult = sut.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
         XCTAssertTrue(launchResult)
     }
     
