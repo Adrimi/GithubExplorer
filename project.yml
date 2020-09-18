@@ -1,21 +1,39 @@
 name: GithubExplorer
 options:
   bundleIdPrefix: io.adrimi
+  deploymentTarget:
+    iOS: 13.0
 
 targets:
   GithubExplorer:
     type: application
     platform: iOS
-    deploymentTarget: "13.0"
+    deploymentTarget: 13.0
     sources: GithubExplorer
     settings:
       base:
         SWIFT_VERSION: "5"
-    scheme:
-      testTargets:
-        - GithubExplorerTests
     info:
       path: GithubExplorer/Resources/Info.plist
+      properties:
+        CFBundleDevelopmentRegion: $(DEVELOPMENT_LANGUAGE)
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        LSRequiresIPhoneOS: true
+        UILaunchStoryboardName: LaunchScreen
+        UIRequiredDeviceCapabilities:
+          - armv7
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default Configuration
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
 
   GithubExplorerTests:
     type: bundle.unit-test
@@ -23,6 +41,6 @@ targets:
     deploymentTarget: "13.0"
     sources: GithubExplorerTests
     info:
-      path: GithubExplorer/Resources/Info.plist
+      path: GithubExplorerTests/Resources/Info.plist
     dependencies:
       - target: GithubExplorer

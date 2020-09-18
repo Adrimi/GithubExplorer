@@ -8,8 +8,8 @@
 import UIKit
 
 class MainWindowFactory: WindowFactory {
-    func createkeyWindow(_ rootVC: UIViewController) -> UIWindow {
-        let window = UIWindow(frame: UIScreen.main.bounds)
+    func createKeyWindow(_ scene: UIWindowScene, _ rootVC: UIViewController) -> UIWindow {
+        let window = UIWindow(windowScene: scene)
         window.rootViewController = rootVC
         window.makeKeyAndVisible()
         return window

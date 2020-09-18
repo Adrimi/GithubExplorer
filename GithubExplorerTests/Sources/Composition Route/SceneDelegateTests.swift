@@ -19,16 +19,18 @@ class SceneDelegateTests: XCTestCase {
     }
     
     func test_shouldSetRootController_fromFactory() {
-        let (sut, windowFactory, rootControllerFacotry) = makeSUT()
-        sut.setWindow()
-        XCTAssertEqual(windowFactory.capturedController, rootControllerFacotry.mainController())
+        let (sut, _, rootControllerFacotry) = makeSUT()
+        XCTAssertEqual(sut.rootControllerFactory.mainController(), rootControllerFacotry.mainController())
     }
     
     // MARK: Helpers
     private func makeSUT() -> (SceneDelegate, WindowFactorySpy, RootControllerFactoryStub) {
         let windowFactory = WindowFactorySpy()
         let rootControllerFactory = RootControllerFactoryStub()
-        let sut = SceneDelegate(windowFactory: windowFactory, rootControllerFactory: rootControllerFactory)
+        let sut = SceneDelegate()
+        
+        sut.windowFactory = windowFactory
+        sut.rootControllerFactory = rootControllerFactory
         
         return (sut, windowFactory, rootControllerFactory)
     }

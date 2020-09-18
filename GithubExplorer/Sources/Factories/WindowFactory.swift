@@ -8,5 +8,5 @@
 import UIKit
 
 protocol WindowFactory {
-    func createkeyWindow(_ rootVC: UIViewController) -> UIWindow
+    func createKeyWindow(_ scene: UIWindowScene, _ rootVC: UIViewController) -> UIWindow
 }

@@ -9,7 +9,7 @@ import UIKit
 
 class MainRootControllerFacory: RootControllerFactory {
     func mainController() -> UIViewController {
-        let viewController = UIViewController()
+        let viewController = HomeViewController()
         let navigationController = UINavigationController()
         navigationController.addChild(viewController)
         return navigationController

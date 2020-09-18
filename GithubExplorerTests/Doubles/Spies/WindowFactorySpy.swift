@@ -12,9 +12,9 @@ class WindowFactorySpy: WindowFactory {
     private(set) var stubbedWindow: UIWindow?
     private(set) var capturedController: UIViewController?
     
-    func createkeyWindow(_ rootVC: UIViewController) -> UIWindow {
+    func createKeyWindow(_ scene: UIWindowScene, _ rootVC: UIViewController) -> UIWindow {
         capturedController = rootVC
-        stubbedWindow = UIWindow(frame: .zero)
+        stubbedWindow = UIWindow(frame: UIScreen.main.bounds)
         stubbedWindow?.rootViewController = rootVC
         stubbedWindow?.bounds = UIScreen.main.bounds
         return stubbedWindow!
