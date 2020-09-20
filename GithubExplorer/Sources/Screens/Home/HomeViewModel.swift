@@ -85,10 +85,13 @@ class HomeViewModel {
             return field.text
                 .dropFirst(1)
                 .removeDuplicates()
+                .eraseToAnyPublisher()
                 .flatMap { [service] query in
                     service.perform(request: .init(query: query))
                 }
-                .assertNoFailure()
+                .catch { error -> Just<[SuggestionModel]> in
+                    Just([])
+                }
                 .map { [search, suggestionSelection] suggestions -> HomeViewModel.State in
                     if suggestions.isEmpty {
                         return .field(search)

@@ -22,6 +22,7 @@ class HomeViewController: UITableViewController {
     
     private var viewModel: HomeViewModel?
     private var cancellables = Set<AnyCancellable>()
+    private var uiCancellables = Set<AnyCancellable>()
     private var latestSnapshot: Snapshot?
     
     convenience init(viewModel: HomeViewModel) {
@@ -46,6 +47,8 @@ class HomeViewController: UITableViewController {
             case let .suggestion(suggestion):
                 let cell = UITableViewCell(style: .default, reuseIdentifier: UITableViewCell.reuseID)
                 cell.textLabel?.text = suggestion.text
+                self.downloadImage(imageView: cell.imageView,
+                                   urlString: suggestion.imageURL)
                 return cell
             }
         }
@@ -84,10 +87,26 @@ class HomeViewController: UITableViewController {
         view.endEditing(true)
         
         let item = latestSnapshot?.itemIdentifiers(inSection: "Search Section")[indexPath.row]
-        if case let .suggestion(s) = item {
-            show(.init(), sender: nil)
+        if case let .suggestion(vm) = item {
+            show(UserDetailsViewController(vm), sender: nil)
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    private func downloadImage(imageView: UIImageView?, urlString: String) {
+        guard let url = URL(string: urlString),
+              let imageView = imageView else { return }
+        URLSession.shared
+            .dataTaskPublisher(for: url)
+            .receive(on: RunLoop.main)
+            .map(\.data)
+            .map(UIImage.init)
+            .catch { _ in
+                Just(nil)
+            }
+            .sink { imageView.image = $0 }
+            .store(in: &uiCancellables)
+            
     }
 }
