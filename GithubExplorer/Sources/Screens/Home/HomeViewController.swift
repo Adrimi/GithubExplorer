@@ -22,6 +22,7 @@ class HomeViewController: UITableViewController {
     
     private var viewModel: HomeViewModel?
     private var cancellables = Set<AnyCancellable>()
+    private var latestSnapshot: Snapshot?
     
     convenience init(viewModel: HomeViewModel) {
         self.init()
@@ -34,7 +35,6 @@ class HomeViewController: UITableViewController {
         title = "Search for Github User"
         
         tableView.dataSource = nil
-        tableView.delegate = nil
         tableView.register(UITableViewCell.self)
         tableView.register(TextFieldTableViewCell.self)
         tableView.tableFooterView = UIView()
@@ -71,7 +71,23 @@ class HomeViewController: UITableViewController {
             .sink(receiveValue: { [weak self] snapshot in
                 self?.tableView.dataSource = datasource
                 datasource.apply(snapshot, animatingDifferences: true)
+                self?.latestSnapshot = snapshot
             })
             .store(in: &cancellables)
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.row > 0 else {
+            tableView.deselectRow(at: indexPath, animated: true)
+            return
+        }
+        view.endEditing(true)
+        
+        let item = latestSnapshot?.itemIdentifiers(inSection: "Search Section")[indexPath.row]
+        if case let .suggestion(s) = item {
+            show(.init(), sender: nil)
+        }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
