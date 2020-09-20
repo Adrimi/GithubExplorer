@@ -70,7 +70,7 @@ class HomeViewModelTests: XCTestCase {
 
     // MARK: makeSUT
     private func makeSUT(service: SuggestionsServiceStub = .init()) -> (HomeViewModel, FieldViewModel) {
-        let search = FieldViewModel()
+        let search = FieldViewModel(text: "test")
         let sut = HomeViewModel(search: search, service: service)
             
         return (sut, search)
@@ -79,7 +79,7 @@ class HomeViewModelTests: XCTestCase {
     // MARK: Tests abstractions
     class StateSpy {
         private(set) var values: [HomeViewModel.State] = []
-        private var cancellables = [AnyCancellable]()
+        private var cancellables = Set<AnyCancellable>()
         init(_ publisher: AnyPublisher<HomeViewModel.State, Never>) {
             publisher.sink { [weak self] state in
                 self?.values.append(state)
@@ -91,11 +91,22 @@ class HomeViewModelTests: XCTestCase {
     class SuggestionsServiceStub: SuggestionsService {
         let stub = (query: "a query",
                     suggestions: [
-                        SuggestionModel(login: "adrimi", avatarURL: ""),
-                        SuggestionModel(login: "uPaid", avatarURL: "")])
+                        SuggestionModel(id: 0, login: "adrimi", avatarURL: ""),
+                        SuggestionModel(id: 1, login: "uPaid", avatarURL: "")])
         
         func perform(request: SuggestionsRequest) -> Just<[SuggestionModel]> {
             Just(request.query == stub.query ? stub.suggestions : [])
         }
+    }
+}
+
+
+class SuggestionViewModelTests: XCTestCase {
+    func test_text_isBasedOnProvidedSuggestionValues() {
+        let suggestion = SuggestionModel(id: 0, login: "adrimi", avatarURL: "google.com")
+        
+        let sut = SuggestionViewModel(suggestion)
+        
+        XCTAssertEqual(sut.text, suggestion.login)
     }
 }

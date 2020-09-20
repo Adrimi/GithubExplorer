@@ -8,27 +8,45 @@
 import UIKit
 import Combine
 
-struct FieldViewModel: Equatable {
-    static func == (lhs: FieldViewModel, rhs: FieldViewModel) -> Bool {
-        true
+struct FieldViewModel: Equatable, Hashable {
+    private(set) var text: CurrentValueSubject<String, Never> = .init("")
+    
+    init(text: String) {
+        self.text = .init(text)
     }
     
-    private(set) var text: CurrentValueSubject<String, Never> = .init("")
+    static func == (lhs: FieldViewModel, rhs: FieldViewModel) -> Bool {
+        lhs.text.value == rhs.text.value
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(text.value)
+    }
 }
 
-struct SuggestionViewModel: Equatable {
-    var select = PassthroughSubject<Void, Never>()
+struct SuggestionViewModel: Equatable, Hashable {
+    let id: Int
+    let text: String
+    let imageURL: String
+    let select: PassthroughSubject<Void, Never>
     
     init(_ suggestion: SuggestionModel) {
         self.init(suggestion, select: .init())
     }
     
     init(_ suggestion: SuggestionModel, select: PassthroughSubject<Void, Never>) {
+        self.id = suggestion.id
+        self.text = suggestion.login
+        self.imageURL = suggestion.avatarURL
         self.select = select
     }
     
     static func == (lhs: SuggestionViewModel, rhs: SuggestionViewModel) -> Bool {
-        true
+        lhs.text == rhs.text && lhs.imageURL == rhs.imageURL
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
@@ -71,11 +89,10 @@ class HomeViewModel {
             }.map { [search, suggestionSelection] suggestions in
                 if suggestions.isEmpty {
                     return .field(search)
-                } else {
-                    return .fieldWithSuggestions(search, suggestions.map { suggestion in
-                        SuggestionViewModel(suggestion, select: suggestionSelection)
-                    })
                 }
+                return .fieldWithSuggestions(search, suggestions.map { suggestion in
+                    SuggestionViewModel(suggestion, select: suggestionSelection)
+                })
             }
             .eraseToAnyPublisher()
     }

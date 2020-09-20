@@ -6,11 +6,12 @@
 //
 
 struct SuggestionModel: Codable {
+    let id: Int
     let login: String
     let avatarURL: String
     
     enum CodingKeys: String, CodingKey {
-        case login
+        case login, id
         case avatarURL = "avatar_url"
     }
 }
