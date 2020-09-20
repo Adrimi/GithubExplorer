@@ -8,5 +8,5 @@
 import Combine
 
 protocol SuggestionsService {
-    func perform(request: SuggestionsRequest) -> Just<[SuggestionModel]>
+    func perform(request: SuggestionsRequest) -> AnyPublisher<[SuggestionModel], Error>
 }

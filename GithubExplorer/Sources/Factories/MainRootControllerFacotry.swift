@@ -10,7 +10,7 @@ import Combine
 
 class MainRootControllerFacory: RootControllerFactory {
     func mainController() -> UIViewController {
-        let service = RandomSuggestionsService()
+        let service = GithubUserSuggestionsService()
         let viewModel = HomeViewModel(search: FieldViewModel(text: "Search"),
                                       service: service)
         let viewController = HomeViewController(viewModel: viewModel)
@@ -22,10 +22,10 @@ class MainRootControllerFacory: RootControllerFactory {
     }
 }
 
-class RandomSuggestionsService: SuggestionsService {
-    func perform(request: SuggestionsRequest) -> Just<[SuggestionModel]> {
-        Just((0...10).map { _ -> SuggestionModel in SuggestionModel(id: Int.random(in: 0...99999999),
-                                            login: "\(Int.random(in: 0...99999999))",
-                                            avatarURL: "") })
-    }
-}
+//class RandomSuggestionsService: SuggestionsService {
+//    func perform(request: SuggestionsRequest) -> Just<[SuggestionModel]> {
+//        Just((0...10).map { _ -> SuggestionModel in SuggestionModel(id: Int.random(in: 0...99999999),
+//                                            login: "\(Int.random(in: 0...99999999))",
+//                                            avatarURL: "") })
+//    }
+//}

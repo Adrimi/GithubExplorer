@@ -81,20 +81,27 @@ class HomeViewModel {
     
     // MARK: Helper methods
     private func search(for field: FieldViewModel) -> AnyPublisher<State, Never> {
-        field.text
-            .dropFirst(1)
-            .removeDuplicates()
-            .flatMap { [service] query in
-                service.perform(request: .init(query: query))
-            }.map { [search, suggestionSelection] suggestions in
-                if suggestions.isEmpty {
-                    return .field(search)
+        if #available(iOS 14.0, *) {
+            return field.text
+                .dropFirst(1)
+                .removeDuplicates()
+                .flatMap { [service] query in
+                    service.perform(request: .init(query: query))
                 }
-                return .fieldWithSuggestions(search, suggestions.map { suggestion in
-                    SuggestionViewModel(suggestion, select: suggestionSelection)
-                })
-            }
-            .eraseToAnyPublisher()
+                .assertNoFailure()
+                .map { [search, suggestionSelection] suggestions -> HomeViewModel.State in
+                    if suggestions.isEmpty {
+                        return .field(search)
+                    }
+                    return .fieldWithSuggestions(search, suggestions.map { suggestion in
+                        SuggestionViewModel(suggestion, select: suggestionSelection)
+                    })
+                }
+                .eraseToAnyPublisher()
+        } else {
+            return Just(State.field(search))
+                .eraseToAnyPublisher()
+        }
     }
 }
 

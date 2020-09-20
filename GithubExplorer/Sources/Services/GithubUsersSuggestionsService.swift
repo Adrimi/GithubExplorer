@@ -10,15 +10,13 @@ import Foundation
 
 
 class GithubUserSuggestionsService: SuggestionsService {
-    func perform(request: SuggestionsRequest) -> Just<[SuggestionModel]> {
+    func perform(request: SuggestionsRequest) -> AnyPublisher<[SuggestionModel], Error> {
         let dataTaskPublisher: AnyPublisher<GithubUserSuggestionsResponse, Error> = URLSession.shared
             .dataTaskPublisher(for: Self.buildURL(from: request))
         let test1 = dataTaskPublisher
             .map(\.items)
-            .compactMap { suggestions in
-                Just(suggestions)
-            }
-        return Just([])
+            .eraseToAnyPublisher()
+        return test1
 //        return test1
     }
     
