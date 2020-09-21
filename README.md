@@ -1,6 +1,7 @@
 ## Github Explorer
 
 This is a sample project of a Github Explorer.
+NOTE: this project needs to be run on iOS 14.0 or newer, to present all of the current functionalities.
 
 1. For your convenience, there is already generated GithubExplorer.xcodeproj file. You could skip to point 5. But if you want to generate it by yourself, go to step 2.
 2. You should have the xcodegen framework to create project (https://github.com/yonaskolb/XcodeGen#installing, easiest way to install is by brew install xcodegen )
