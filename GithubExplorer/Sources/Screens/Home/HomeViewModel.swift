@@ -5,7 +5,6 @@
 //  Created by adrian.szymanowski on 18/09/2020.
 //
 
-import UIKit
 import Combine
 
 struct FieldViewModel: Equatable, Hashable {
@@ -85,7 +84,6 @@ class HomeViewModel {
             return field.text
                 .dropFirst(1)
                 .removeDuplicates()
-                .eraseToAnyPublisher()
                 .flatMap { [service] query in
                     service.perform(request: .init(query: query))
                 }

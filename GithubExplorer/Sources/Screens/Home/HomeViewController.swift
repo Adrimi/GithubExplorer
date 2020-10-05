@@ -99,12 +99,10 @@ class HomeViewController: UITableViewController {
               let imageView = imageView else { return }
         URLSession.shared
             .dataTaskPublisher(for: url)
-            .receive(on: RunLoop.main)
             .map(\.data)
             .map(UIImage.init)
-            .catch { _ in
-                Just(nil)
-            }
+            .catch { _ in Just(nil) }
+            .receive(on: RunLoop.main)
             .sink { imageView.image = $0 }
             .store(in: &uiCancellables)
             

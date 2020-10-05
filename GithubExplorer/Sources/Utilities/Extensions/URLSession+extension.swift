@@ -9,19 +9,14 @@ import Combine
 import Foundation
 
 extension URLSession {
-    enum SessionError: Error {
-        case statusCode(HTTPURLResponse)
-    }
-    
-    func dataTaskPublisher<T: Decodable>(for url: URL) -> AnyPublisher<T, Error> {
+    func publisher<T: Decodable>(
+        for url: URL,
+        responseType: T.Type = T.self,
+        decoder: JSONDecoder = .init()
+    ) -> AnyPublisher<T, Error> {
         dataTaskPublisher(for: url)
-            .tryMap { (data, response) -> Data in
-                if let response = response as? HTTPURLResponse, (200..<300).contains(response.statusCode) == false {
-                    throw SessionError.statusCode(response)
-                }
-                return data
-            }
-            .decode(type: T.self, decoder: JSONDecoder())
+            .map(\.data)
+            .decode(type: T.self, decoder: decoder)
             .eraseToAnyPublisher()
     }
 }

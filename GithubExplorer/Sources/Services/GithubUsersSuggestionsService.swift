@@ -11,13 +11,11 @@ import Foundation
 
 class GithubUserSuggestionsService: SuggestionsService {
     func perform(request: SuggestionsRequest) -> AnyPublisher<[SuggestionModel], Error> {
-        let dataTaskPublisher: AnyPublisher<GithubUserSuggestionsResponse, Error> = URLSession.shared
-            .dataTaskPublisher(for: Self.buildURL(from: request))
-        let test1 = dataTaskPublisher
+        URLSession.shared
+            .publisher(for: Self.buildURL(from: request),
+                       responseType: GithubUserSuggestionsResponse.self)
             .map(\.items)
             .eraseToAnyPublisher()
-        return test1
-//        return test1
     }
     
     static func buildURL(from request: SuggestionsRequest) -> URL {
